@@ -1,6 +1,6 @@
 # Don't track content of these folders
 outputs/
-model/*
+model/**
 logs/
 __pycache__/
 core
@@ -43,3 +43,16 @@ GPU-Re-Ranking/extension/propagation/dist
 
 # data
 data/
+
+# Allow committing lightweight experiment outputs under model/
+# Note: parent directories must be un-ignored for nested files to be tracked.
+!model/**/
+!model/**/opts.yaml
+!model/**/result.txt
+!model/**/train.jpg
+
+# Keep large checkpoints and redundant copies untracked
+model/**/net_*.pth
+model/**/net_last.pth
+model/**/train.py
+model/**/model.py
