@@ -17,6 +17,8 @@ import os
 import scipy.io
 import yaml
 import math
+import subprocess
+import sys
 from torch.optim import swa_utils
 from tqdm import tqdm
 from model import ft_net, ft_net_dense, ft_net_hr, ft_net_swin, ft_net_swinv2, ft_net_dino, ft_net_efficient, ft_net_NAS, ft_net_convnext, PCB, PCB_test
@@ -349,7 +351,14 @@ scipy.io.savemat('pytorch_result.mat',result)
 
 print(opt.name)
 result = './model/%s/result.txt'%opt.name
-os.system('python evaluate_gpu.py | tee -a %s'%result)
+eval_process = subprocess.run([sys.executable, 'evaluate_gpu.py'], capture_output=True, text=True)
+eval_output = (eval_process.stdout or '') + (eval_process.stderr or '')
+if eval_output:
+    print(eval_output, end='')
+with open(result, 'a', encoding='utf-8') as result_file:
+    result_file.write(eval_output)
+if eval_process.returncode != 0:
+    print('evaluate_gpu.py exited with code %d' % eval_process.returncode)
 
 if opt.multi:
     result = {'mquery_f':mquery_feature.numpy(),'mquery_label':mquery_label,'mquery_cam':mquery_cam}

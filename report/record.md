@@ -2,7 +2,7 @@
 
 ## 2026-02-28 - Market1501 - ft_ResNet50
 
-### Command
+### Test Command
 
 ```bash
 python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data_dir ./Market-1501-v15.09.15/pytorch
@@ -59,4 +59,26 @@ python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data
 - Final metrics (Epoch 59): `train_loss=0.0209`, `train_acc=0.9994`, `val_loss=0.0062`, `val_acc=0.9800`.
 - Best validation accuracy observed: `0.9800` (first reached at Epoch 12, maintained afterwards).
 - Best validation loss observed in shown log: `0.0053` (Epoch 41).
+
+## 2026-02-28 - Test Record - ft_ResNet50
+
+### Command
+
+```bash
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060
+```
+
+### Result
+
+- Test feature extraction: `success`
+- Runtime: `0m 35.26s`
+- Feature output: `pytorch_result.mat`
+- Model tag printed: `ft_ResNet50`
+- Feature shape: `torch.Size([3368, 512])`
+- Evaluation metrics: `Rank@1=0.877375`, `Rank@5=0.956057`, `Rank@10=0.972387`, `mAP=0.721856`
+
+### Test Notes
+
+- torchvision printed deprecation warnings for `pretrained`/`weights`.
+- Evaluation is now executed successfully inside `test.py` using the current interpreter (`sys.executable`).
 

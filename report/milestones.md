@@ -5,8 +5,8 @@
 - [x] M1 环境与依赖准备
 - [x] M2 数据集准备（Market-1501）
 - [x] M3 Baseline 训练（ResNet50）
-- [ ] M4 特征提取与测试集前向
-- [ ] M5 性能评估（CMC 与 mAP）
+- [x] M4 特征提取与测试集前向
+- [x] M5 性能评估（CMC 与 mAP）
 - [ ] M6 检索可视化验证
 - [ ] M7 扩展实验（可选）
 - [ ] M8 实验记录与报告提交
@@ -64,40 +64,51 @@
 
 - 目标：使用训练好的模型提取 query/gallery 特征。
 - 步骤：
-  - [ ] 执行：`python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 60`
-  - [ ] 确认测试过程无路径或权重加载错误。
+  - [x] 执行：`python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060`
+  - [x] 确认测试过程无路径或权重加载错误。
 - 验收标准：
-  - [ ] 测试脚本运行完成。
-  - [ ] 成功产出评估所需特征结果文件。
+  - [x] 测试脚本运行完成。
+  - [x] 成功产出评估所需特征结果文件。
 
 - 执行命令（复制即用）：
 
 ```bash
-python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 60
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060
+```
+
+- 备选命令（直接加载最后权重）：
+
+```bash
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch last
 ```
 
 - 记录模板（执行后填写）：
-  - [ ] 执行时间：`YYYY-MM-DD HH:mm`
-  - [ ] 使用权重：`which_epoch=60`
-  - [ ] 运行状态：`成功/失败`
-  - [ ] 特征文件路径：`待填写`
-  - [ ] 备注（报错或警告）：`待填写`
+  - [x] 执行时间：`2026-02-28`
+  - [x] 使用权重：`which_epoch=060`
+  - [x] 运行状态：`成功`
+  - [x] 特征文件路径：`pytorch_result.mat`
+  - [x] 备注（报错或警告）：`torchvision pretrained 参数弃用警告`
 
 - 终端关键输出粘贴区：
 
 ```text
-[在此粘贴 test.py 末尾关键输出]
+19732it [00:29, 670.56it/s]
+3368it [00:05, 577.51it/s]
+Training complete in 0m 35.26s
+ft_ResNet50
+torch.Size([3368, 512])
+Rank@1:0.877375 Rank@5:0.956057 Rank@10:0.972387 mAP:0.721856
 ```
 
 ### M5 性能评估（CMC 与 mAP）
 
 - 目标：得到可汇报的检索性能指标。
 - 步骤：
-  - [ ] 执行：`python evaluate_gpu.py`
-  - [ ] 记录 Rank-1、Rank-5、Rank-10 与 mAP 指标。
+  - [x] 执行：`python evaluate_gpu.py`（由 `test.py` 自动调用完成）
+  - [x] 记录 Rank-1、Rank-5、Rank-10 与 mAP 指标。
 - 验收标准：
-  - [ ] 成功输出 CMC/mAP。
-  - [ ] 指标可与仓库 baseline 结果进行对比。
+  - [x] 成功输出 CMC/mAP。
+  - [x] 指标可与仓库 baseline 结果进行对比。
 
 - 执行命令（复制即用）：
 
@@ -109,21 +120,22 @@ python evaluate_gpu.py
 
 | 指标 | 本次结果 | Baseline/参考 | 结论 |
 | --- | ---: | ---: | --- |
-| Rank-1 | 待填写 | 待填写 | 待填写 |
-| Rank-5 | 待填写 | 待填写 | 待填写 |
-| Rank-10 | 待填写 | 待填写 | 待填写 |
-| mAP | 待填写 | 待填写 | 待填写 |
+| Rank-1 | 0.877375 | 待填写 | 达到可用水平 |
+| Rank-5 | 0.956057 | 待填写 | 达到可用水平 |
+| Rank-10 | 0.972387 | 待填写 | 达到可用水平 |
+| mAP | 0.721856 | 待填写 | 达到可用水平 |
 
 - 运行记录：
-  - [ ] 执行时间：`YYYY-MM-DD HH:mm`
-  - [ ] 运行状态：`成功/失败`
-  - [ ] 结果文件路径（如有）：`待填写`
-  - [ ] 异常与修复：`待填写`
+  - [x] 执行时间：`2026-02-28`
+  - [x] 运行状态：`成功`
+  - [x] 结果文件路径（如有）：`./model/ft_ResNet50/result.txt`
+  - [x] 异常与修复：`已修复 subprocess 解释器不一致问题，评估可正常执行`
 
 - 终端关键输出粘贴区：
 
 ```text
-[在此粘贴 evaluate_gpu.py 输出]
+torch.Size([3368, 512])
+Rank@1:0.877375 Rank@5:0.956057 Rank@10:0.972387 mAP:0.721856
 ```
 
 ### M6 检索可视化验证
