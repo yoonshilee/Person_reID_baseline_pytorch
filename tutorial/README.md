@@ -97,7 +97,7 @@ Check the Prerequisites. The download links for this practice are:
 A quick command line to download Market-1501 is: 
 ```
 pip install gdown
-gdown https://drive.google.com/uc\?id\=0B8-rUzbwVRk0c054eEozWG9COHM
+gdown https://drive.google.com/uc?id=0B8-rUzbwVRk0c054eEozWG9COHM
 ```
 
 
@@ -205,7 +205,7 @@ OK. Now we have prepared the training data and defined model structure.
 
 We can train a model by
 ```bash
-python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32  --data_dir your_data_path
+python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32  --data_dir ./Market-1501-v15.09.15/pytorch
 ```
 `--gpu_ids` which gpu to run.
 
@@ -297,7 +297,7 @@ Every 10 training epoch, we save a snapshot and update the loss curve.
 ### Part 2.1: Extracting feature (`python test.py`)
 In this part, we load the network weight (we just trained) to extract the visual feature of every image.
 ```bash
-python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir your_data_path  --batchsize 32 --which_epoch 60
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 60
 ```
 `--gpu_ids` which gpu to run.
 

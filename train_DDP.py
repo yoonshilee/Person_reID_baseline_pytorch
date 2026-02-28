@@ -172,7 +172,7 @@ cpu_count = multiprocessing.cpu_count()
 opt.workers = 4
 opt.prefetch_factor = 2
 if cpu_count>=32:
-    opt.workers = 8
+    opt.workers = 0
     opt.prefetch_factor = 4
 
 img_sampler ={x: torch.utils.data.distributed.DistributedSampler(image_datasets[x]) for x in ['train', 'val']}
@@ -192,7 +192,7 @@ if opt.DG:
     image_datasets['DG'] = DGFolder(os.path.join('../DG-Market' ),
                                           data_transforms['train'])
     dataloaders['DG'] = torch.utils.data.DataLoader(image_datasets['DG'], batch_size = max(8, opt.batchsize//2),
-                                             shuffle=True, num_workers=2, pin_memory=True)
+                                             shuffle=True, num_workers=0, pin_memory=True)
     DGloader_iter = enumerate(dataloaders['DG'])
 
 dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}

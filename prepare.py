@@ -1,14 +1,10 @@
 import os
 from shutil import copyfile
 
-download_path = '../Market' # Please not change.
-download_path2 = '../Market-1501-v15.09.15' # You only need to change this line to your dataset download path
+download_path = './Market-1501-v15.09.15' # Set this to your dataset download path
 
 if not os.path.isdir(download_path):
-    if os.path.isdir(download_path2):
-        os.system('mv %s %s'%(download_path2, download_path)) # rename
-    else:
-        print('please change the download_path')
+    raise FileNotFoundError('please change the download_path')
 
 save_path = download_path + '/pytorch'
 if not os.path.isdir(save_path):
