@@ -7,7 +7,7 @@
 - [x] M3 Baseline 训练（ResNet50）
 - [x] M4 特征提取与测试集前向
 - [x] M5 性能评估（CMC 与 mAP）
-- [ ] M6 检索可视化验证
+- [x] M6 检索可视化验证
 - [ ] M7 扩展实验（可选）
 - [ ] M8 实验记录与报告提交
 
@@ -143,10 +143,26 @@ Rank@1:0.877375 Rank@5:0.956057 Rank@10:0.972387 mAP:0.721856
 - 目标：通过可视化确认模型检索效果。
 - 步骤：
   - [x] 执行：`python demo.py --query_index 777`（可替换不同 query）。
-  - [ ] 观察 Top-K 返回结果中正负样本分布。
+  - [x] 观察 Top-K 返回结果中正负样本分布。
 - 验收标准：
-  - [ ] 可正常显示或打印 Top-10 检索结果。
-  - [ ] 能解释至少 2 个成功匹配与 2 个失败匹配案例。
+  - [x] 可正常显示或打印 Top-10 检索结果。
+  - [x] 能解释至少 2 个成功匹配与 2 个失败匹配案例。
+
+- Duke 成功/失败案例（基于最近一次 Duke 测试生成的 `./pytorch_result.mat`）：
+  - Success-1（Top-10 全为正样本）：
+    - Query：`query_index=0`，`label=5`，`cam=2`
+    - Query path：`./data/DukeMTMC-reID/pytorch/query/0005/0005_c2_f0046985.jpg`
+    - Top-1：`./data/DukeMTMC-reID/pytorch/gallery/0005/0005_c5_f0052021.jpg`
+    - Top-10 正样本数：`10/10`
+    - 可视化：`./report/pics/show_success1.png`
+  - Success-2（Top-10 全为正样本）：
+    - Query：`query_index=1`，`label=5`，`cam=5`
+    - Query path：`./data/DukeMTMC-reID/pytorch/query/0005/0005_c5_f0051781.jpg`
+    - Top-1：`./data/DukeMTMC-reID/pytorch/gallery/0005/0005_c2_f0047345.jpg`
+    - Top-10 正样本数：`10/10`
+    - 可视化：`./report/pics/show_success2.png`
+  - Failure-1：见 `M7.7 Case-1`（可视化 `./report/pics/show_case1.png`）
+  - Failure-2：见 `M7.7 Case-2`（可视化 `./report/pics/show_case2.png`）
 
 ### M7 扩展实验（可选）
 
@@ -234,7 +250,7 @@ python evaluate_gpu.py
   - 训练日期：`2026-02-28`
   - 训练命令：`python train.py --gpu_ids 0 --name duke_ft_ResNet50 --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch`
   - 训练配置摘要：`nclasses=702`，`batchsize=32`，`lr=0.05`，`total_epoch=60`，`droprate=0.5`
-  - 训练耗时（从 train.py 日志填写）：
+  - 训练耗时（从 train.py 日志填写）：`113m 35s`
   - 产物确认：`net_010.pth ... net_060.pth`，`net_last.pth`，`opts.yaml`，`train.jpg`
   - 测试日期：`2026-02-28`
   - 测试命令：`python test.py --gpu_ids 0 --name duke_ft_ResNet50 --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060`
@@ -252,6 +268,7 @@ duke_ft_ResNet50
 torch.Size([2228, 512])
 Rank@1:0.793537 Rank@5:0.889587 Rank@10:0.920108 mAP:0.617418
 ```
+
 - 验收标准：
   - [x] 得到 Duke baseline 的 Rank@1/5/10 和 mAP。
   - [x] 有可复现实验命令与权重路径。
@@ -273,13 +290,14 @@ python train.py --gpu_ids 0 --name duke_ft_HR --train_all --batchsize 32 --data_
 python test.py --gpu_ids 0 --name duke_ft_HR --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --use_hr
 ```
 
+
 - 步骤：
   - [x] DenseNet 方案：训练、测试、评估。
   - [x] HRNet 方案：训练、测试、评估。
   - [x] 与 Duke baseline 对比性能与速度。
 - 记录区：
   - Dense 训练日期：`2026-02-28`
-  - Dense 训练耗时（从 train.py 日志填写）：
+  - Dense 训练耗时（从 train.py 日志填写）：`138m 6s`
   - Dense 测试日期：`2026-02-28`
   - Dense 训练命令：`python train.py --gpu_ids 0 --name duke_ft_Dense --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --use_dense`
   - Dense 测试命令：`python test.py --gpu_ids 0 --name duke_ft_Dense --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --use_dense`
@@ -314,6 +332,7 @@ duke_ft_HR
 torch.Size([2228, 512])
 Rank@1:0.838869 Rank@5:0.924147 Rank@10:0.942101 mAP:0.694562
 ```
+
 - 验收标准：
   - [x] 两个 backbone 均有完整指标。
   - [x] 有“性能-开销”对比结论。
@@ -415,6 +434,19 @@ git clone https://github.com/layumi/Person-reID-verification.git
 #### M7.7 失败案例分析（报告硬性要求）
 
 - 目标：至少提取 2 个失败案例，并解释错误原因。
+
+- 判定说明（如何区分“异人误匹配”与“同人误检/同人未检出”）：
+  - 异人误匹配（False Positive in Top-K）：
+    - 定义：在 Top-K（如 Top-1/Top-10）返回结果中，高排名样本属于错误身份。
+    - 可操作判据：`Rank-1` 的 gallery 身份 `label != query_label`；或 Top-K 中错误身份占据多数。
+    - 直观现象：视觉上 query 与 Top-1/Top-K 目标外观相似（衣着、姿态、背景），但身份不同。
+  - 同人未检出/同人误检（漏检，False Negative in Top-K）：
+    - 定义：正确身份（同一 label）的 gallery 样本存在，但没有出现在 Top-K 内，或排名非常靠后。
+    - 可操作判据：Top-K 内正样本数为 0（`topK_positives=0`），或“首个正确匹配出现的 rank”远大于 K（如 `first_positive_rank >> 10`）。
+    - 直观现象：模型没有把同一人（跨相机、遮挡、模糊、光照变化）排到前列。
+  - 备注：同一个 query 往往会同时满足两类（Top-1 错 + Top-10 无正样本），写报告时建议按“主要现象”归类：
+    - 若强调“Top-1/Top-K 被错误身份占据”，归为“异人误匹配”。
+    - 若强调“正确身份存在但排得很靠后/Top-K 完全没有正样本”，归为“同人未检出（漏检）”。
 - 执行命令（建议）：
 
 ```bash
@@ -425,17 +457,31 @@ python demo.py --query_index 1200
 ```
 
 - 步骤：
-  - [ ] 基于 `demo.py` 或排名结果，收集 hard cases。
-  - [ ] 至少记录 2 类失败：
+  - [x] 基于 `demo.py` 或排名结果，收集 hard cases。
+  - [x] 至少记录 2 类失败：
     - 同人误检（姿态/遮挡/跨相机）
     - 异人误匹配（衣着相似/背景干扰）
-  - [ ] 对每个失败案例记录 query ID、误检 gallery ID、原因分析。
+  - [x] 对每个失败案例记录 query ID、误检 gallery ID、原因分析。
 - 记录区：
-  - Case-1（同人误检）：
-  - Case-2（异人误匹配）：
+  - Case-1（同人误检，正样本极靠后）：
+    - 使用结果文件：`./pytorch_result.mat`（最近一次 Duke 测试生成）
+    - Query：`query_index=1883`，`label=4315`，`cam=6`
+    - Query path：`./data/DukeMTMC-reID/pytorch/query/4315/4315_c6_f0076814.jpg`
+    - Top-1 误检：`./data/DukeMTMC-reID/pytorch/gallery/6367/6367_c8_f0073570.jpg`（label=6367）
+    - 首个正确匹配：`Rank=4274`，`./data/DukeMTMC-reID/pytorch/gallery/4315/4315_c7_f0080881.jpg`
+    - Top-10 正样本数：`0/10`
+    - 现象与可能原因：`Top-10 全为负样本且首个正样本非常靠后，属于典型 hard case，常见原因包括跨相机光照差异、遮挡/模糊、以及衣着/背景相似导致的误匹配。建议结合 ./report/pics/show_case1.png 做可视化说明。`
+  - Case-2（异人误匹配，Top-10 全负样本）：
+    - 使用结果文件：`./pytorch_result.mat`（最近一次 Duke 测试生成）
+    - Query：`query_index=67`，`label=51`，`cam=1`
+    - Query path：`./data/DukeMTMC-reID/pytorch/query/0051/0051_c1_f0060060.jpg`
+    - Top-1 误检：`./data/DukeMTMC-reID/pytorch/gallery/6794/6794_c8_f0178831.jpg`（label=6794）
+    - 首个正确匹配：`Rank=3277`，`./data/DukeMTMC-reID/pytorch/gallery/0051/0051_c2_f0060553.jpg`
+    - Top-10 正样本数：`0/10`
+    - 现象与可能原因：`Query 来自 cam1，正确匹配在 cam2，但 Top-10 被其它身份占据，说明跨相机外观变化下特征区分度不足。建议结合 ./report/pics/show_case2.png 做可视化说明，并尝试 re-ranking 或更强 backbone。`
 - 验收标准：
-  - [ ] 至少 2 个具体失败案例（含图像 ID 或路径）。
-  - [ ] 每个案例有可解释原因。
+  - [x] 至少 2 个具体失败案例（含图像 ID 或路径）。
+  - [x] 每个案例有可解释原因。
 
 - M7 总验收：
   - [ ] Duke 相关实验覆盖 README Part4 可选项。
@@ -459,7 +505,7 @@ python demo.py --query_index 1200
 - 步骤（本文件内直接填写）：
   - [x] 基线与变体结果汇总（Market + Duke）已完成。
   - [x] 至少 3 个 Quick Questions 已回答。
-  - [ ] 至少 2 个失败案例已写入。
+  - [x] 至少 2 个失败案例已写入。
   - [x] 至少 2 条改进建议已给出。
   - [x] AI Safety 反思已完成。
   - [ ] 最终提交版（LaTeX，≥2页）已生成。
@@ -508,8 +554,8 @@ python demo.py --query_index 1200
   - [x] 至少 2 条改进建议
   - [x] AI Safety 反思
 - 可复现性：
-  - [ ] 关键命令已列出
-  - [ ] 关键超参数已列出
+  - [x] 关键命令已列出
+  - [x] 关键超参数已列出（详见 `./model/*/opts.yaml`）
   - [ ] 结果指标与对应实验一致
   - [ ] 权重与日志路径可追溯
 - 提交事项：
@@ -520,7 +566,7 @@ python demo.py --query_index 1200
 - 交付物检查（对应 requirement.md）：
   - [ ] 基线 + 变体性能总结已包含。
   - [x] 至少 3 个 Quick Questions 已回答。
-  - [ ] 至少 2 个失败案例已分析。
+  - [x] 至少 2 个失败案例已分析。
   - [x] 至少 2 条改进建议已给出。
   - [x] AI 安全反思已完成。
 
