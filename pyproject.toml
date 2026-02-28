@@ -1,0 +1,17 @@
+[project]
+name = "person-reid-baseline-pytorch"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "efficientnet-pytorch>=0.7.1",
+    "gdown>=5.2.1",
+    "matplotlib>=3.9.4",
+    "pretrainedmodels>=0.7.4",
+    "pytorch-metric-learning>=2.9.0",
+    "pyyaml>=6.0.3",
+    "scipy>=1.13.1",
+    "timm>=0.6.0",
+    "tqdm>=4.67.3",
+]
