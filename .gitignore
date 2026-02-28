@@ -41,4 +41,5 @@ GPU-Re-Ranking/extension/propagation/dist
 *.pth
 .venv
 
-Market-1501-v15.09.15/
+# data
+data/

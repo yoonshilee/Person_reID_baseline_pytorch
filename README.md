@@ -369,7 +369,7 @@ python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32  --dat
 
 `--name` the name of model.
 
-`--data_dir` the path of the training data, e.g., `/home/yourname/Market/pytorch`
+`--data_dir` the path of the training data, e.g., `./data/Market-1501-v15.09.15/pytorch`
 
 `--train_all` using all images to train. 
 

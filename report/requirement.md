@@ -70,7 +70,7 @@ Report-2 DDL is extended to 8 Mar.
    means current folder;
    - `../`  means upper folder;
    - `../../`  means upper folder of upper folder.
-   - Or using absolute path like /home/user/Market/pytorch
+   - Or using absolute path like /home/user/data/Market-1501-v15.09.15/pytorch
 4. The pseudo-code in the tutorial is for illustrating logic only; it is not meant to be executable.
 Please do not modify the code following Tutorial.
 5. demo.py is based on the extracted feature, which is saved in the `pytorch_feature.mat`
@@ -147,7 +147,7 @@ python evaluate_gpu.py
    - `./` 表示当前目录；
    - `../` 表示上一级目录；
    - `../../` 表示上上级目录；
-   - 也可使用绝对路径，例如 `/home/user/Market/pytorch`。
+   - 也可使用绝对路径，例如 `/home/user/data/Market-1501-v15.09.15/pytorch`。
 4. 教程中的伪代码仅用于说明逻辑，不可直接执行。请勿按照教程修改代码。
 5. `demo.py` 依赖提取好的特征文件，该文件保存在 `pytorch_feature.mat` 中。请先运行 `test.py` 提取特征，再运行 `demo.py`。
 6. 如需使用Duke数据集，请使用新增的 `prepare-Duke.py`，或自行修改 `prepare.py`。

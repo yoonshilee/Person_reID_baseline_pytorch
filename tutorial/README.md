@@ -205,13 +205,13 @@ OK. Now we have prepared the training data and defined model structure.
 
 We can train a model by
 ```bash
-python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32  --data_dir ./Market-1501-v15.09.15/pytorch
+python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32  --data_dir ./data/Market-1501-v15.09.15/pytorch
 ```
 `--gpu_ids` which gpu to run.
 
 `--name` the name of the model.
 
-`--data_dir` the path of the training data, e.g., `/home/yourname/Market/pytorch`
+`--data_dir` the path of the training data, e.g., `./data/Market-1501-v15.09.15/pytorch`
 
 `--train_all` using all images to train. 
 
@@ -297,7 +297,7 @@ Every 10 training epoch, we save a snapshot and update the loss curve.
 ### Part 2.1: Extracting feature (`python test.py`)
 In this part, we load the network weight (we just trained) to extract the visual feature of every image.
 ```bash
-python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 60
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./data/Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 60
 ```
 `--gpu_ids` which gpu to run.
 

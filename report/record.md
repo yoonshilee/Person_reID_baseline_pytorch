@@ -5,12 +5,12 @@
 ### Test Command
 
 ```bash
-python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data_dir ./Market-1501-v15.09.15/pytorch
+python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data_dir ./data/Market-1501-v15.09.15/pytorch
 ```
 
 ### Config (from ./model/ft_ResNet50/opts.yaml)
 
-- Dataset: `./Market-1501-v15.09.15/pytorch`
+- Dataset: `./data/Market-1501-v15.09.15/pytorch`
 - Train split: `train_all=true`
 - GPU: `gpu_ids=[0]`
 - Batch size: `32`
@@ -65,7 +65,7 @@ python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data
 ### Command
 
 ```bash
-python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./data/Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060
 ```
 
 ### Result

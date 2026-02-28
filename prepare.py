@@ -1,7 +1,7 @@
 import os
 from shutil import copyfile
 
-download_path = './Market-1501-v15.09.15' # Set this to your dataset download path
+download_path = './data/Market-1501-v15.09.15' # Set this to your dataset download path
 
 if not os.path.isdir(download_path):
     raise FileNotFoundError('please change the download_path')
