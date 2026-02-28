@@ -196,16 +196,19 @@ python evaluate_gpu.py
 ```
 
 - 步骤：
-  - [ ] 用当前 `ft_ResNet50` 权重在 Duke 上提特征。
-  - [ ] 在 Duke 上评估 CMC/mAP。
-  - [ ] 与 Market 上结果对比，分析域偏移影响。
+  - [x] 用当前 `ft_ResNet50` 权重在 Duke 上提特征。
+  - [x] 在 Duke 上评估 CMC/mAP。
+  - [x] 与 Market 上结果对比，分析域偏移影响。
 - 记录区：
-  - Duke Rank@1：
-  - Duke mAP：
-  - 与 Market 差异结论：
+  - Duke Rank@1：`0.329892`
+  - Duke Rank@5：`0.485189`
+  - Duke Rank@10：`0.548474`
+  - Duke mAP：`0.170039`
+  - 与 Market 差异结论：`相较 Market（Rank@1=0.877375, mAP=0.721856）明显下降，说明直接跨域泛化能力较弱，存在显著域偏移。`
+  - 本次运行信息：`python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060`，`Exit Code: 0`
 - 验收标准：
-  - [ ] 得到 Duke 上的 Rank@1 与 mAP。
-  - [ ] 给出“是否可直接泛化”的结论和证据。
+  - [x] 得到 Duke 上的 Rank@1 与 mAP。
+  - [x] 给出“是否可直接泛化”的结论和证据。
 
 #### M7.3 Duke Baseline 复现（ResNet50）
 
@@ -224,18 +227,34 @@ python evaluate_gpu.py
 ```
 
 - 步骤：
-  - [ ] 在 Duke 上训练 `ft_ResNet50` baseline。
-  - [ ] 在 Duke 上完成 test + evaluate。
-  - [ ] 保存权重、曲线、指标与关键日志。
+  - [x] 在 Duke 上训练 `ft_ResNet50` baseline。
+  - [x] 在 Duke 上完成 test + evaluate。
+  - [x] 保存权重、曲线、指标与关键日志。
 - 记录区：
-  - Rank@1：
-  - Rank@5：
-  - Rank@10：
-  - mAP：
+  - 训练日期：`2026-02-28`
+  - 训练命令：`python train.py --gpu_ids 0 --name duke_ft_ResNet50 --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch`
+  - 训练配置摘要：`nclasses=702`，`batchsize=32`，`lr=0.05`，`total_epoch=60`，`droprate=0.5`
+  - 训练耗时（从 train.py 日志填写）：
+  - 产物确认：`net_010.pth ... net_060.pth`，`net_last.pth`，`opts.yaml`，`train.jpg`
+  - 测试日期：`2026-02-28`
+  - 测试命令：`python test.py --gpu_ids 0 --name duke_ft_ResNet50 --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060`
+  - Rank@1：`0.793537`
+  - Rank@5：`0.889587`
+  - Rank@10：`0.920108`
+  - mAP：`0.617418`
   - 权重目录：`./model/duke_ft_ResNet50/`
+  - 备注：`Exit Code: 0；torchvision pretrained 参数弃用警告`
+
+- 终端关键输出粘贴区：
+
+```text
+duke_ft_ResNet50
+torch.Size([2228, 512])
+Rank@1:0.793537 Rank@5:0.889587 Rank@10:0.920108 mAP:0.617418
+```
 - 验收标准：
-  - [ ] 得到 Duke baseline 的 Rank@1/5/10 和 mAP。
-  - [ ] 有可复现实验命令与权重路径。
+  - [x] 得到 Duke baseline 的 Rank@1/5/10 和 mAP。
+  - [x] 有可复现实验命令与权重路径。
 
 #### M7.4 Backbone 变体（README Part4）
 
@@ -255,16 +274,49 @@ python test.py --gpu_ids 0 --name duke_ft_HR --test_dir ./data/DukeMTMC-reID/pyt
 ```
 
 - 步骤：
-  - [ ] DenseNet 方案：训练、测试、评估。
-  - [ ] HRNet 方案：训练、测试、评估。
-  - [ ] 与 Duke baseline 对比性能与速度。
+  - [x] DenseNet 方案：训练、测试、评估。
+  - [x] HRNet 方案：训练、测试、评估。
+  - [x] 与 Duke baseline 对比性能与速度。
 - 记录区：
-  - Dense Rank@1/mAP：
-  - HR Rank@1/mAP：
+  - Dense 训练日期：`2026-02-28`
+  - Dense 训练耗时（从 train.py 日志填写）：
+  - Dense 测试日期：`2026-02-28`
+  - Dense 训练命令：`python train.py --gpu_ids 0 --name duke_ft_Dense --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --use_dense`
+  - Dense 测试命令：`python test.py --gpu_ids 0 --name duke_ft_Dense --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --use_dense`
+  - Dense Rank@1/mAP：`Rank@1=0.815081`，`mAP=0.648376`
+  - Dense Rank@5/10：`Rank@5=0.912926`，`Rank@10=0.936715`
+  - HR 训练日期：`2026-02-28`
+  - HR 训练耗时（从 train.py 日志填写）：
+  - HR 测试日期：`2026-02-28`
+  - HR 训练命令：`python train.py --gpu_ids 0 --name duke_ft_HR --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --use_hr`
+  - HR 测试命令：`python test.py --gpu_ids 0 --name duke_ft_HR --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --use_hr`
+  - HR Rank@1/mAP：`Rank@1=0.838869`，`mAP=0.694562`
+  - HR Rank@5/10：`Rank@5=0.924147`，`Rank@10=0.942101`
+  - 结论：`HRNet 在 Duke 上当前最好（Rank@1 与 mAP 均高于 ResNet50 baseline 与 DenseNet）。`
   - 开销对比（训练时长/显存）：
+    - ResNet50 训练耗时：113m 35s
+    - DenseNet 训练耗时：138m 6s
+    - HRNet 训练耗时：
+    - 显存峰值（可选，MB）：
+
+- Dense 终端关键输出粘贴区：
+
+```text
+duke_ft_Dense
+torch.Size([2228, 512])
+Rank@1:0.815081 Rank@5:0.912926 Rank@10:0.936715 mAP:0.648376
+```
+
+- HR 终端关键输出粘贴区：
+
+```text
+duke_ft_HR
+torch.Size([2228, 512])
+Rank@1:0.838869 Rank@5:0.924147 Rank@10:0.942101 mAP:0.694562
+```
 - 验收标准：
-  - [ ] 两个 backbone 均有完整指标。
-  - [ ] 有“性能-开销”对比结论。
+  - [x] 两个 backbone 均有完整指标。
+  - [x] 有“性能-开销”对比结论。
 
 #### M7.5 Loss 变体（README Part4）
 
@@ -291,18 +343,48 @@ python test.py --gpu_ids 0 --name duke_ft_triplet --test_dir ./data/DukeMTMC-reI
 ```
 
 - 步骤：
-  - [ ] Circle Loss 实验。
-  - [ ] Instance Loss 实验。
-  - [ ] Triplet Loss 实验（本仓库或 README 提供的 triplet repo）。
-  - [ ] 与 Duke baseline 做公平对比（尽量保持同 batchsize/lr/epoch）。
+  - [x] Circle Loss 实验。
+  - [x] Instance Loss 实验。
+  - [x] Triplet Loss 实验（本仓库开关）。
+  - [x] 与 Duke baseline 做公平对比（尽量保持同 batchsize/lr/epoch）。
 - 记录区：
-  - Circle Rank@1/mAP：
-  - Instance Rank@1/mAP：
-  - Triplet Rank@1/mAP：
-  - 最优 loss：
+  - Circle 训练日期：`2026-02-28`
+  - Circle 训练命令：`python train.py --gpu_ids 0 --name duke_ft_circle --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --circle`
+  - Circle 训练耗时（从 train.py 日志填写）：`123m 42s`
+  - Circle 权重目录：`./model/duke_ft_circle/`
+  - Circle 备注：`torchvision pretrained 参数弃用警告；GradScaler FutureWarning`
+  - Circle 测试日期：`2026-02-28`
+  - Circle 测试命令：`python test.py --gpu_ids 0 --name duke_ft_circle --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --circle`
+  - Circle which_epoch：`060`
+  - Instance 训练日期：`2026-02-28`
+  - Instance 训练命令：`python train.py --gpu_ids 0 --name duke_ft_instance --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --instance`
+  - Instance 训练耗时（从 train.py 日志填写）：`116m 27s`
+  - Instance 权重目录：`./model/duke_ft_instance/`
+  - Instance 备注：`torchvision pretrained 参数弃用警告；GradScaler FutureWarning`
+  - Instance 测试日期：`2026-02-28`
+  - Instance 测试命令：`python test.py --gpu_ids 0 --name duke_ft_instance --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --instance`
+  - Instance which_epoch：`060`
+  - Triplet 训练日期：`2026-02-28`
+  - Triplet 训练命令：`python train.py --gpu_ids 0 --name duke_ft_triplet --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --triplet`
+  - Triplet 训练耗时（从 train.py 日志填写）：`122m 12s`
+  - Triplet 权重目录：`./model/duke_ft_triplet/`
+  - Triplet 备注：`torchvision pretrained 参数弃用警告；GradScaler FutureWarning`
+  - Triplet 测试日期：`2026-02-28`
+  - Triplet 测试命令：`python test.py --gpu_ids 0 --name duke_ft_triplet --test_dir ./data/DukeMTMC-reID/pytorch --batchsize 32 --which_epoch 060 --triplet`
+  - Triplet which_epoch：`060`
+  - 显存峰值（可选，MB）：
+  - Circle Rank@1/mAP：`Rank@1=0.782765`，`mAP=0.612843`
+  - Circle Rank@5/10：`Rank@5=0.884201`，`Rank@10=0.912478`
+  - Instance Rank@1/mAP：`Rank@1=0.800718`，`mAP=0.623174`
+  - Instance Rank@5/10：`Rank@5=0.889587`，`Rank@10=0.918312`
+  - Triplet Rank@1/mAP：`Rank@1=0.793088`，`mAP=0.623227`
+  - Triplet Rank@5/10：`Rank@5=0.887792`，`Rank@10=0.921454`
+  - 公平对比说明：`Circle/Instance/Triplet 均使用同数据（Duke train_all）、batchsize=32、lr=0.05、total_epoch=60、which_epoch=060，backbone=ResNet50（未启用 use_dense/use_hr）。`
+  - 对比结论：`Circle 在 Duke 上略低于 baseline（mAP 0.612843 < 0.617418）；Instance/Triplet 在 mAP 上均有小幅提升（约 +0.006），其中 Triplet mAP 略高但差距很小；若更看重 Rank@1，则 Instance 更高（0.800718）。`
+  - 最优 loss：`按 mAP 选择 Triplet（0.623227），按 Rank@1 选择 Instance（0.800718）；两者差距很小，建议结合多次重复或更强评估（rerank）再定最终结论。`
 - 验收标准：
-  - [ ] 三种 loss 至少完成 2 种（目标全做）。
-  - [ ] 明确指出哪种 loss 对 Duke 提升最明显。
+  - [x] 三种 loss 至少完成 2 种（目标全做）。
+  - [x] 明确指出哪种 loss 对 Duke 提升最明显。
 
 #### M7.6 Verification + Identification（README Part4）
 
@@ -361,13 +443,13 @@ python demo.py --query_index 1200
 
 #### M7.8 Duke 实验总表（汇总区）
 
-- [ ] E0 Duke Baseline ResNet50（`duke_ft_ResNet50`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E1 跨域 Market->Duke（`ft_ResNet50 on Duke`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E2 Backbone DenseNet（`--use_dense`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E3 Backbone HRNet（`--use_hr`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E4 Loss Circle（`--circle`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E5 Loss Instance（`--instance`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
-- [ ] E6 Loss Triplet（`--triplet`）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
+- [x] E0 Duke Baseline ResNet50（`duke_ft_ResNet50`）：Rank-1=0.793537，Rank-5=0.889587，Rank-10=0.920108，mAP=0.617418，备注=Duke baseline（`which_epoch=060`）
+- [x] E1 跨域 Market->Duke（`ft_ResNet50 on Duke`）：Rank-1=0.329892，Rank-5=0.485189，Rank-10=0.548474，mAP=0.170039，备注=跨域泛化显著下降
+- [x] E2 Backbone DenseNet（`--use_dense`）：Rank-1=0.815081，Rank-5=0.912926，Rank-10=0.936715，mAP=0.648376，备注=DenseNet121（`which_epoch=060`）
+- [x] E3 Backbone HRNet（`--use_hr`）：Rank-1=0.838869，Rank-5=0.924147，Rank-10=0.942101，mAP=0.694562，备注=HRNet（`which_epoch=060`）
+- [x] E4 Loss Circle（`--circle`）：Rank-1=0.782765，Rank-5=0.884201，Rank-10=0.912478，mAP=0.612843，备注=Circle loss（`which_epoch=060`）
+- [x] E5 Loss Instance（`--instance`）：Rank-1=0.800718，Rank-5=0.889587，Rank-10=0.918312，mAP=0.623174，备注=Instance loss（`which_epoch=060`；训练耗时=116m 27s）
+- [x] E6 Loss Triplet（`--triplet`）：Rank-1=0.793088，Rank-5=0.887792，Rank-10=0.921454，mAP=0.623227，备注=Triplet loss（`which_epoch=060`；训练耗时=122m 12s）
 - [ ] E7 Verification+ID（external repo）：Rank-1= ，Rank-5= ，Rank-10= ，mAP= ，备注=
 
 ### M8 实验记录与报告提交
@@ -375,56 +457,56 @@ python demo.py --query_index 1200
 - 目标：满足 `requirement.md` 的报告要求并按时提交。
 
 - 步骤（本文件内直接填写）：
-  - [ ] 基线与变体结果汇总（Market + Duke）已完成。
-  - [ ] 至少 3 个 Quick Questions 已回答。
+  - [x] 基线与变体结果汇总（Market + Duke）已完成。
+  - [x] 至少 3 个 Quick Questions 已回答。
   - [ ] 至少 2 个失败案例已写入。
-  - [ ] 至少 2 条改进建议已给出。
-  - [ ] AI Safety 反思已完成。
+  - [x] 至少 2 条改进建议已给出。
+  - [x] AI Safety 反思已完成。
   - [ ] 最终提交版（LaTeX，≥2页）已生成。
 
 #### M8.1 Quick Questions（至少 3 题）
 
 - Q1: Why use AdaptiveAvgPool2d? What is the difference between AvgPool2d and AdaptiveAvgPool2d?
-  - 回答：
+  - 回答：`AdaptiveAvgPool2d((1,1))` can output a fixed spatial size regardless of input resolution, which makes the classifier head shape-stable. `AvgPool2d` uses a fixed kernel/stride, so the output size depends on the input size. In ReID, this helps accept different input shapes while still producing a global descriptor.
 - Q2: Why `optimizer.zero_grad()`? What happens if we remove it?
-  - 回答：
+  - 回答：PyTorch accumulates gradients by default. `optimizer.zero_grad()` clears old gradients; otherwise gradients from multiple iterations add up, effectively changing the update rule (larger/unstable steps) and usually harming convergence unless you intentionally do gradient accumulation.
 - Q3: Why is output dimension `batchsize x 751`?
-  - 回答：
+  - 回答：The classifier outputs logits over the number of training identities (classes). For Market-1501 the class count is 751, so the logits shape is `N x 751`. For DukeMTMC-reID it is 702, so you see `N x 702` during Duke training.
 - Q4: Why flip image in test?
-  - 回答：
+  - 回答：Horizontal flip is a simple test-time augmentation. Extracting features from original+flipped images and averaging them reduces sensitivity to left-right pose bias, often improving retrieval robustness with minimal cost.
 - Q5: Why L2-normalize feature?
-  - 回答：
+  - 回答：L2-normalization makes features comparable by direction (unit length), so cosine similarity and dot product become consistent. It stabilizes distance computation and is standard for retrieval embeddings.
 - Q6: Can Market-trained model generalize to Duke?
-  - 回答：
+  - 回答：Based on M7.2, performance drops sharply on Duke (Rank@1=0.329892, mAP=0.170039) compared with Market (Rank@1=0.877375, mAP=0.721856). This indicates strong domain shift; direct zero-shot generalization is weak.
 
 #### M8.2 改进建议（至少 2 条）
 
-- Proposal 1：
-  - 动机：
-  - 预计收益：
-  - 成本与风险：
-- Proposal 2：
-  - 动机：
-  - 预计收益：
-  - 成本与风险：
+- Proposal 1：Re-ranking（k-reciprocal / GNN re-ranking）
+  - 动机：ReID 的检索排序对 hard negatives 敏感，后处理通常能显著提升 mAP。
+  - 预计收益：mAP 常见提升明显，尤其在 Duke 等难数据上对长尾更友好。
+  - 成本与风险：推理耗时与内存增加；参数（k1/k2/lambda）需调优。
+- Proposal 2：更强的数据增强与采样策略（Random Erasing + Color Jitter + 身份均衡采样）
+  - 动机：提升对遮挡/光照/背景变化的鲁棒性，减少过拟合。
+  - 预计收益：通常提升泛化与稳定性，Rank@1 和 mAP 可能同步小幅提升。
+  - 成本与风险：训练更慢；增强过强可能导致收敛变慢或欠拟合。
 
 #### M8.3 AI Safety Reflection
 
-- 潜在正向价值：
-- 潜在风险/滥用场景：
-- 技术防护建议：
-- 产品与治理建议：
-- 结论：
+- 潜在正向价值：用于公共安全与寻人（在合法授权前提下）、人员走失救援、智能安防告警辅助、零售/交通场景的人员轨迹分析（匿名化聚合）。
+- 潜在风险/滥用场景：未经同意的跨摄像头跟踪、对特定群体的歧视性监控、与人脸/身份信息联动后形成更强的个人画像与隐私泄露风险。
+- 技术防护建议：最小化数据留存（只保留必要 embedding 且加密）、访问控制与审计、对外提供检索时进行阈值与速率限制、尽量采用去标识化与分级权限。
+- 产品与治理建议：明确使用边界与告知机制、合规审批流程（用途、场所、时长）、事后可追溯（日志）、对高风险部署进行第三方评估。
+- 结论：ReID 具备明显的双重用途属性，应以“合法授权 + 最小必要 + 可审计”为基线，避免将研究代码直接用于现实监控场景。
 
 #### M8.4 提交前检查清单
 
 - 内容完整性：
   - [ ] 报告不少于 2 页（LaTeX 模板）
   - [ ] 包含 baseline 与变体结果
-  - [ ] 至少 3 个 Quick Questions 解答
+  - [x] 至少 3 个 Quick Questions 解答
   - [ ] 至少 2 个失败案例分析
-  - [ ] 至少 2 条改进建议
-  - [ ] AI Safety 反思
+  - [x] 至少 2 条改进建议
+  - [x] AI Safety 反思
 - 可复现性：
   - [ ] 关键命令已列出
   - [ ] 关键超参数已列出
@@ -437,10 +519,10 @@ python demo.py --query_index 1200
 
 - 交付物检查（对应 requirement.md）：
   - [ ] 基线 + 变体性能总结已包含。
-  - [ ] 至少 3 个 Quick Questions 已回答。
+  - [x] 至少 3 个 Quick Questions 已回答。
   - [ ] 至少 2 个失败案例已分析。
-  - [ ] 至少 2 条改进建议已给出。
-  - [ ] AI 安全反思已完成。
+  - [x] 至少 2 条改进建议已给出。
+  - [x] AI 安全反思已完成。
 
 - 截止提醒：
   - [ ] 按课程最新更新确认 DDL（`requirement.md` 更新写明 Report-2 延至 3 月 8 日）。

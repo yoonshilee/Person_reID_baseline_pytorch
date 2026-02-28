@@ -39,6 +39,9 @@ parser.add_argument('--linear_num', default=512, type=int, help='feature dimensi
 parser.add_argument('--use_dense', action='store_true', help='use densenet121' )
 parser.add_argument('--use_efficient', action='store_true', help='use efficient-b4' )
 parser.add_argument('--use_hr', action='store_true', help='use hr18 net' )
+parser.add_argument('--circle', action='store_true', help='use circle loss model (for compatibility)' )
+parser.add_argument('--instance', action='store_true', help='use instance loss model (for compatibility)' )
+parser.add_argument('--triplet', action='store_true', help='use triplet loss model (for compatibility)' )
 parser.add_argument('--PCB', action='store_true', help='use PCB' )
 parser.add_argument('--multi', action='store_true', help='use multiple query' )
 parser.add_argument('--fp16', action='store_true', help='use fp16.' )
@@ -57,6 +60,12 @@ opt.PCB = config['PCB']
 opt.use_dense = config['use_dense']
 opt.use_NAS = config['use_NAS']
 opt.stride = config['stride']
+if 'circle' in config:
+    opt.circle = config['circle']
+if 'instance' in config:
+    opt.instance = config['instance']
+if 'triplet' in config:
+    opt.triplet = config['triplet']
 if 'use_swin' in config:
     opt.use_swin = config['use_swin']
 if 'use_swinv2' in config:
@@ -225,7 +234,9 @@ def extract_feature(model,dataloaders):
                 if scale != 1:
                     # bicubic is only  available in pytorch>= 1.1
                     input_img = nn.functional.interpolate(input_img, scale_factor=scale, mode='bicubic', align_corners=False)
-                outputs = model(input_img) 
+                outputs = model(input_img)
+                if isinstance(outputs, (list, tuple)):
+                    outputs = outputs[0]
                 ff += outputs
         # norm feature
         if opt.PCB:
@@ -294,7 +305,7 @@ elif opt.use_efficient:
 elif opt.use_hr:
     model_structure = ft_net_hr(opt.nclasses, linear_num=opt.linear_num)
 else:
-    model_structure = ft_net(opt.nclasses, stride = opt.stride, ibn = opt.ibn, linear_num=opt.linear_num, usam=opt.usam)
+    model_structure = ft_net(opt.nclasses, stride = opt.stride, circle=opt.circle, ibn = opt.ibn, linear_num=opt.linear_num, usam=opt.usam)
 
 if opt.PCB:
     model_structure = PCB(opt.nclasses)
