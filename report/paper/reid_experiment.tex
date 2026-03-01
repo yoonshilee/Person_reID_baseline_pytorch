@@ -51,8 +51,7 @@ Person ReID aims to retrieve images of the same person identity from a gallery g
 Compared with closed-set classification, ReID is typically evaluated as a retrieval problem using embedding representations and distance-based ranking.
 This makes ReID a practical lens for studying representation learning, because good embeddings must be discriminative (separate different identities) and robust (invariant to camera, pose, occlusion, and illumination).
 
-In this work, we reproduce a baseline model on Market-1501~\cite{zheng2015scalable} and then run controlled variants on DukeMTMC-reID.
-We focus on (1) baseline reproduction, (2) domain shift across datasets, (3) the effect of changing backbones and loss functions, and (4) failure-case analysis and safety reflection.
+In this work, we reproduce a baseline model on Market-1501~\cite{zheng2015scalable} and run controlled variants on DukeMTMC-reID, covering baseline reproduction, cross-dataset domain shift, the impact of different backbones and loss functions, and failure-case analysis with safety reflection.
 
 \section{Method}
 \subsection{Baseline architecture}
