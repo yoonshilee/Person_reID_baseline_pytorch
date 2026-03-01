@@ -1,0 +1,197 @@
+\documentclass[sigconf,nonacm]{acmart}
+
+\AtBeginDocument{%
+  \providecommand\BibTeX{{%
+    \normalfont B\kern-0.5em{\scshape i\kern-0.25em b}\kern-0.8em\TeX}}}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{listings}
+
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breaklines=true,
+  breakatwhitespace=true,
+  columns=fullflexible
+}
+
+\setlength{\headheight}{15.6pt}
+
+\graphicspath{{../pics/}}
+
+\title{Representation Learning for Person Re-Identification: Baseline Reproduction and Variants on Market-1501 and DukeMTMC-reID}
+
+\author{Ruiheng Li}
+\affiliation{%
+  \institution{FST, University of Macau, Macau, China}
+  \city{Macau}
+  \country{China}
+}
+\email{mc565072@um.edu.mo}
+
+\begin{document}
+
+\begin{abstract}
+Person re-identification (ReID) is a representation learning problem where a model must match the same identity across cameras under large appearance changes.
+In this report, we reproduce a strong baseline on Market-1501 and study variants on DukeMTMC-reID using the public PyTorch ReID baseline code.
+On Market-1501, the ResNet-50 baseline achieves Rank@1 $=0.8774$ and mAP $=0.7219$.
+We also observe a severe domain shift when directly testing the Market-trained model on DukeMTMC-reID (Rank@1 $=0.3299$, mAP $=0.1700$).
+Training on DukeMTMC-reID recovers performance (ResNet-50 Rank@1 $=0.7935$, mAP $=0.6174$), and using a stronger backbone (HRNet) further improves results (Rank@1 $=0.8389$, mAP $=0.6946$).
+Finally, we analyze two concrete failure cases and discuss improvement directions and AI safety considerations.
+\end{abstract}
+
+\keywords{Person Re-identification, Representation Learning, Metric Learning, Retrieval, Deep Learning}
+
+\maketitle
+
+\section{Introduction}
+Person ReID aims to retrieve images of the same person identity from a gallery given a query image.
+Compared with closed-set classification, ReID is typically evaluated as a retrieval problem using embedding representations and distance-based ranking.
+This makes ReID a practical lens for studying representation learning, because good embeddings must be discriminative (separate different identities) and robust (invariant to camera, pose, occlusion, and illumination).
+
+In this work, we reproduce a baseline model on Market-1501~\cite{zheng2015scalable} and then run controlled variants on DukeMTMC-reID.
+We focus on (1) baseline reproduction, (2) domain shift across datasets, (3) the effect of changing backbones and loss functions, and (4) failure-case analysis and safety reflection.
+
+\section{Method}
+\subsection{Baseline architecture}
+We follow the codebase default design: a CNN backbone (ResNet-50~\cite{he2016deep} by default) produces a feature map, followed by global pooling to obtain a fixed-length descriptor.
+The descriptor is projected to a 512-dimensional embedding and trained with an identity classification head (softmax cross-entropy).
+
+\subsection{Testing protocol}
+At test time, query and gallery embeddings are extracted and matched by distance.
+The evaluation reports Cumulative Matching Characteristics (CMC) and mean Average Precision (mAP).
+We also use a common test-time augmentation: horizontal flip, where features from the original and flipped image are averaged.
+
+\section{Experimental Setup}
+\subsection{Datasets}
+\textbf{Market-1501}~\cite{zheng2015scalable} is a widely-used ReID benchmark with 751 training identities and evaluation by query/gallery split.
+\textbf{DukeMTMC-reID}~\cite{ristani2016performance,zheng2017unlabeled} is another benchmark with 702 training identities and similar evaluation protocol.
+
+\subsection{Training configuration}
+Unless otherwise stated, we use the same training recipe across experiments for fair comparison: batch size $32$, total epochs $60$, initial learning rate $0.05$, weight decay $5\times 10^{-4}$, and dropout $0.5$.
+The code is configured to train with \texttt{--train\_all}, which removes a held-out validation split for hyper-parameter tuning.
+This simplifies the pipeline but increases the risk of overfitting and makes model selection less principled; therefore, the final comparison relies on the fixed query/gallery evaluation.
+
+\subsection{Commands and reproducibility}
+We use the following commands:
+\begin{lstlisting}
+python train.py --gpu_ids 0 --name ft_ResNet50 --train_all --batchsize 32 --data_dir ./data/Market-1501-v15.09.15/pytorch
+python test.py --gpu_ids 0 --name ft_ResNet50 --test_dir ./data/Market-1501-v15.09.15/pytorch --batchsize 32 --which_epoch 060
+python train.py --gpu_ids 0 --name duke_ft_ResNet50 --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch
+python train.py --gpu_ids 0 --name duke_ft_HR --train_all --batchsize 32 --data_dir ./data/DukeMTMC-reID/pytorch --use_hr
+\end{lstlisting}
+
+\section{Results}
+\subsection{Market-1501 baseline reproduction}
+Table 1 summarizes the reproduced baseline results on Market-1501.
+
+\begin{table}[t]
+\centering
+\small
+\begin{tabular}{lcccc}
+\toprule
+Model & Rank@1 & Rank@5 & Rank@10 & mAP \\
+\midrule
+ResNet-50 (softmax) & 0.8774 & 0.9561 & 0.9724 & 0.7219 \\
+\bottomrule
+\end{tabular}
+\caption{Baseline results on Market-1501 using \texttt{ft\_ResNet50} (epoch 60).}
+\label{tab:market}
+\end{table}
+
+\subsection{Domain shift: Market-trained model on Duke}
+Directly applying the Market-trained model on Duke results in a large performance drop (Rank@1 $=0.3299$, mAP $=0.1700$), indicating strong domain shift.
+This is consistent with the intuition that camera networks, backgrounds, illumination, and clothing distribution differ across datasets, so representations trained for one domain may not transfer without adaptation.
+
+\subsection{Duke training and variants}
+Table 2 reports Duke results when training on Duke as well as variants.
+Among tested backbones, HRNet yields the best performance in our runs.
+
+\begin{table}[t]
+\centering
+\small
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{lcccc}
+\toprule
+Setting & Rank@1 & Rank@5 & Rank@10 & mAP \\
+\midrule
+Market $\rightarrow$ Duke (zero-shot) & 0.3299 & 0.4852 & 0.5485 & 0.1700 \\
+Duke baseline (ResNet-50) & 0.7935 & 0.8896 & 0.9201 & 0.6174 \\
+Duke + DenseNet (\texttt{--use\_dense}) & 0.8151 & 0.9129 & 0.9367 & 0.6484 \\
+Duke + HRNet (\texttt{--use\_hr}) & \textbf{0.8389} & \textbf{0.9241} & \textbf{0.9421} & \textbf{0.6946} \\
+Duke + Circle loss (\texttt{--circle}) & 0.7828 & 0.8842 & 0.9125 & 0.6128 \\
+Duke + Instance loss (\texttt{--instance}) & 0.8007 & 0.8896 & 0.9183 & 0.6232 \\
+Duke + Triplet loss (\texttt{--triplet}) & 0.7931 & 0.8878 & 0.9215 & 0.6232 \\
+\bottomrule
+\end{tabular}
+}
+\caption{Results on DukeMTMC-reID (epoch 60). ``Market $\rightarrow$ Duke'' denotes testing Duke using the Market-trained \texttt{ft\_ResNet50} without fine-tuning.}
+\label{tab:duke}
+\end{table}
+
+\section{Quick Questions}
+This section summarizes key practical questions from the tutorial and our experiments.
+
+\noindent\textbf{Why use AdaptiveAvgPool2d?} Adaptive average pooling (e.g., output size $1\times 1$) produces a fixed spatial output regardless of the input resolution.
+This keeps the head shape-stable, while fixed-kernel average pooling would make the output depend on the input size.
+
+\noindent\textbf{Why horizontally flip images in test?} Flip test-time augmentation averages features from original and flipped images.
+This reduces sensitivity to left-right pose bias and often improves retrieval robustness with minimal compute overhead.
+
+\noindent\textbf{Why L2-normalize features?} L2-normalization puts embeddings on the unit hypersphere.
+Distances then emphasize angular differences and become less sensitive to scale, making similarity computation more stable for retrieval.
+
+\noindent\textbf{Why call \texttt{optimizer.zero\_grad()}?} Gradients accumulate by default in PyTorch.
+Without clearing old gradients each iteration, updates implicitly sum gradients across steps, which usually destabilizes training unless gradient accumulation is intended.
+
+\section{Failure Case Analysis}
+We analyze two failure cases from Duke evaluation (visualizations in Figure 1).
+Both cases exhibit a ``no positives in Top-10'' pattern, where the first correct match appears extremely late in the ranking.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{show_case1.png}
+
+  \includegraphics[width=0.98\linewidth]{show_case2.png}
+  \caption{Two DukeMTMC-reID failure cases (Top-10 retrieval visualization). Top: Case-1 (query index 1883, label 4315). Bottom: Case-2 (query index 67, label 51).}
+  \Description{Two vertically stacked retrieval result images showing failure cases on DukeMTMC-reID. The top image corresponds to query index 1883 and the bottom image corresponds to query index 67; both show wrong top-ranked matches and no positives in top-10.}
+  \label{fig:failures}
+\end{figure}
+
+\subsection{Case-1: missed match under cross-camera variation}
+Query image: \nolinkurl{4315_c6_f0076814.jpg} (ID 4315, query index 1883).
+The Top-1 retrieved image is an incorrect identity, \nolinkurl{6367_c8_f0073570.jpg}, and the first true match does not appear until rank 4274 (\nolinkurl{4315_c7_f0080881.jpg}).
+This large rank gap indicates weak cross-camera invariance: viewpoint and illumination changes likely shift the query embedding away from its true cluster, while visually similar hard negatives occupy the top positions.
+
+\subsection{Case-2: false positives dominate Top-K}
+Query image: \nolinkurl{0051_c1_f0060060.jpg} (ID 0051, query index 67).
+The Top-1 result is also a false positive (\nolinkurl{6794_c8_f0178831.jpg}), and the first correct gallery image appears only at rank 3277 (\nolinkurl{0051_c2_f0060553.jpg}).
+The pattern suggests that the model over-relies on non-identity cues, such as background context or coarse clothing color, producing confident but semantically incorrect matches in early retrieval ranks.
+
+\section{Improvement Proposals}
+Based on the above results and observed failures, we propose:
+\begin{itemize}
+  \item \textbf{Re-ranking:} apply k-reciprocal re-ranking or GNN-based re-ranking to refine the initial ranking. This often improves mAP by correcting hard negatives at high ranks, at the cost of additional time and memory.
+  \item \textbf{Stronger augmentation and sampling:} combine random erasing, color jitter, and identity-balanced sampling to improve robustness to occlusion and illumination changes, reducing overfitting to dataset-specific cues.
+\end{itemize}
+
+\section{AI Safety Reflection}
+ReID is a dual-use technology.
+It can support positive applications such as search-and-rescue and authorized security auditing, but it can also enable non-consensual tracking and discriminatory surveillance.
+We suggest safeguards aligned with ``lawful authorization + minimal necessity + auditability'': minimize retention (store only necessary encrypted embeddings), enforce access control and audit logs, apply rate limiting and thresholding for external queries, and conduct governance reviews for high-risk deployments.
+
+\section{Conclusion}
+We reproduced a strong ReID baseline on Market-1501 and evaluated transfer and variants on DukeMTMC-reID.
+The reproduced Market baseline achieves Rank@1 $=0.8774$ and mAP $=0.7219$.
+Zero-shot transfer from Market to Duke fails badly, highlighting domain shift.
+Training on Duke restores performance, and a stronger backbone (HRNet) improves retrieval quality further.
+Failure-case analysis suggests that cross-camera variation and hard negatives remain major challenges, motivating re-ranking and stronger augmentation as practical next steps.
+
+{\small
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{egbib}
+}
+
+\end{document}
