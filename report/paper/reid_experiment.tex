@@ -131,6 +131,13 @@ Duke + Triplet loss (\texttt{--triplet}) & 0.7931 & 0.8878 & 0.9215 & 0.6232 \\
 \label{tab:duke}
 \end{table}
 
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{duke_variants_bar.pdf}
+  \caption{Rank@1 and mAP comparison across DukeMTMC-reID variants.}
+  \label{fig:duke_bar}
+\end{figure}
+
 \section{Quick Questions}
 This section summarizes key practical questions from the tutorial and our experiments.
 
@@ -155,7 +162,7 @@ Both cases exhibit a ``no positives in Top-10'' pattern, where the first correct
   \includegraphics[width=0.98\linewidth]{show_case1.png}
 
   \includegraphics[width=0.98\linewidth]{show_case2.png}
-  \caption{Two DukeMTMC-reID failure cases (Top-10 retrieval visualization). Top: Case-1 (query index 1883, label 4315). Bottom: Case-2 (query index 67, label 51).}
+  \caption{Two DukeMTMC-reID failure cases (Top-10 retrieval visualization). Top: Case-1 (query index 1883, ID 4315). Bottom: Case-2 (query index 67, ID 0051).}
   \Description{Two vertically stacked retrieval result images showing failure cases on DukeMTMC-reID. The top image corresponds to query index 1883 and the bottom image corresponds to query index 67; both show wrong top-ranked matches and no positives in top-10.}
   \label{fig:failures}
 \end{figure}

@@ -1,13 +1,14 @@
 # Fdb version 4
-["bibtex reid_experiment"] 1772348433.46457 "reid_experiment.aux" "reid_experiment.bbl" "reid_experiment" 1772348763.5072 0
+["bibtex reid_experiment"] 1772350928.05122 "reid_experiment.aux" "reid_experiment.bbl" "reid_experiment" 1772350935.85144 0
   "./egbib.bib" 1772347463 1297 5cc239f8bb5785f35a3d095ce7653c40 ""
   "d:/Programs/texlive/2025/texmf-dist/bibtex/bst/acmart/ACM-Reference-Format.bst" 1756890776 90749 48abc1cbed6fafc6fc31528e3aa606ca ""
-  "reid_experiment.aux" 1772348761 4669 d640cc96bc1be1c021de9cd2e3e3c0b4 "pdflatex"
+  "reid_experiment.aux" 1772350933 4945 f8cee643ead56653e4281ba8f588ada9 "pdflatex"
   (generated)
   "reid_experiment.bbl"
   "reid_experiment.blg"
   (rewritten before read)
-["pdflatex"] 1772348757.81177 "reid_experiment.tex" "reid_experiment.pdf" "reid_experiment" 1772348763.50809 0
+["pdflatex"] 1772350929.39855 "reid_experiment.tex" "reid_experiment.pdf" "reid_experiment" 1772350935.85236 0
+  "../pics/duke_variants_bar.pdf" 1772350874 19830 7c4846efa5aa4d18132fb1a09e775b58 ""
   "../pics/show_case1.png" 1772294457 395850 086ebcd0e319ed36fe1f74977b875e6a ""
   "../pics/show_case2.png" 1772294457 400303 ecbebf2885742e56d7da8171ec15eec1 ""
   "acmart.cls" 1770045427 96943 22aab88eb4450dc97aba90abe39b216c ""
@@ -197,10 +198,10 @@
   "d:/Programs/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1756897591 5512731 f330c4c4fb5a54e33b022254ab52c150 ""
   "d:/Programs/texlive/2025/texmf-var/web2c/pdftex/pdflatex.fmt" 1756898137 3346221 d4b5c874b9d05ff25e431f7a96bb86ca ""
   "d:/Programs/texlive/2025/texmf.cnf" 1756897543 713 e69b156964470283e0530f5060668171 ""
-  "reid_experiment.aux" 1772348761 4669 d640cc96bc1be1c021de9cd2e3e3c0b4 "pdflatex"
-  "reid_experiment.bbl" 1772348434 3722 cc25ec8a5878221bfb4e3791d2da740d "bibtex reid_experiment"
-  "reid_experiment.out" 1772348761 3652 a7e35cde17137770fe45b0d2f644d8db "pdflatex"
-  "reid_experiment.tex" 1772348759 11834 61621ec1be689476434d5bf2657beb0c ""
+  "reid_experiment.aux" 1772350933 4945 f8cee643ead56653e4281ba8f588ada9 "pdflatex"
+  "reid_experiment.bbl" 1772350929 3722 cc25ec8a5878221bfb4e3791d2da740d "bibtex reid_experiment"
+  "reid_experiment.out" 1772350933 3652 eef51e5acffdd1d80f85c533d6e99437 "pdflatex"
+  "reid_experiment.tex" 1772350886 12034 34e07c8da9120153e08eb8eaea011343 ""
   (generated)
   "reid_experiment.aux"
   "reid_experiment.log"
