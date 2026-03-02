@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.3)  2 MAR 2026 12:58
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.3)  2 MAR 2026 19:54
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1520,32 +1520,42 @@ LaTeX Font Warning: Font shape `TU/zi4/b/n' undefined
 
 ]
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/m/it' will be
-(Font)              scaled to size 9.0pt on input line 117.
+(Font)              scaled to size 9.0pt on input line 122.
 
-Overfull \hbox (2.51225pt too wide) in paragraph at lines 117--118
+Overfull \hbox (2.51225pt too wide) in paragraph at lines 122--123
 \TU/LinLibertine(0)/m/n/9 the largest gains ($\LMS/ntxsy/m/n/9 Ï\OT1/LinLibertine(0)/m/n/9 0\OML/nxlmi/m/it/9 :\OT1/LinLibertine(0)/m/n/9 0454$ \TU/LinLibertine(0)/m/n/9 Rank@1, $\LMS/ntxsy/m/n/9 Ï\OT1/LinLibertine(0)/m/n/9 0\OML/nxlmi/m/it/9 :\OT1/LinLibertine(0)/m/n/9 0772$ \TU/LinLibertine(0)/m/n/9 mAP), benefiting from
  []
 
+
+Overfull \hbox (4.20027pt too wide) in paragraph at lines 125--133
+\TU/LinLibertine(0)/m/n/9 precision. Triplet loss achieves a similar mAP ($\OT1/LinLibertine(0)/m/n/9 0\OML/nxlmi/m/it/9 :\OT1/LinLibertine(0)/m/n/9 6232$\TU/LinLibertine(0)/m/n/9 ) with Rank@1
+ []
+
+
+Overfull \hbox (7.96051pt too wide) in paragraph at lines 125--133
+\TU/LinLibertine(0)/m/n/9 losses push same-identity pairs closer while pulling different-identity
+ []
+
+
+
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
-(Font)              scaled to size 8.0pt on input line 143.
+(Font)              scaled to size 8.0pt on input line 151.
 File: ../pics/duke_variants_bar.pdf Graphic file (type pdf)
 <use ../pics/duke_variants_bar.pdf>
 
-Class acmart Warning: A possible image without description on input line 153.
+Class acmart Warning: A possible image without description on input line 161.
 
-
-
-LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
-(Font)              scaled to size 6.6pt on input line 170.
-LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
-(Font)              scaled to size 5.5pt on input line 170.
 
 
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 9.0pt on input line 179.
+(Font)              scaled to size 9.0pt on input line 169.
 LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 179.
+(Font)              scaled to size 7.0pt on input line 169.
 [2.2]
+LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
+(Font)              scaled to size 6.6pt on input line 178.
+LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
+(Font)              scaled to size 5.5pt on input line 178.
 File: ../pics/show_success1.png Graphic file (type bmp)
 <../pics/show_success1.png>
 File: ../pics/show_success2.png Graphic file (type bmp)
@@ -1555,47 +1565,57 @@ File: ../pics/show_case1.png Graphic file (type bmp)
 File: ../pics/show_case2.png Graphic file (type bmp)
 <../pics/show_case2.png>
 
-Overfull \hbox (5.02423pt too wide) in paragraph at lines 201--204
+Overfull \hbox (5.02423pt too wide) in paragraph at lines 209--212
 \TU/LinLibertine(0)/m/n/9 The Top-1 retrieved image is an incorrect identity, $[][][][] [] [][] [] [][][][][][][][] []
  []
 
 
-Overfull \hbox (6.56479pt too wide) in paragraph at lines 201--204
+Overfull \hbox (6.56479pt too wide) in paragraph at lines 209--212
 \TU/LinLibertine(0)/m/n/9 invariance: viewpoint and illumination changes likely shift the query
  []
 
 
 
 
-Overfull \hbox (1.68074pt too wide) in paragraph at lines 213--218
+Overfull \hbox (1.68074pt too wide) in paragraph at lines 221--226
 \TU/LinLibertine(0)/m/n/9 near the decision boundary. In published benchmarks, mAP
  []
 
 
-Overfull \hbox (2.27776pt too wide) in paragraph at lines 218--221
+Overfull \hbox (2.27776pt too wide) in paragraph at lines 226--229
 []\TU/LinLibertine(0)/b/n/9 Stronger augmentation and sampling: \TU/LinLibertine(0)/m/n/9 combine random
  []
 
 
-Overfull \hbox (3.20853pt too wide) in paragraph at lines 224--226
+Overfull \hbox (3.33226pt too wide) in paragraph at lines 229--233
+\TU/LinLibertine(0)/m/n/9 background, directly targeting the background-interference
+ []
+
+
+
+[3.3]
+Overfull \hbox (3.20853pt too wide) in paragraph at lines 236--238
 \TU/LinLibertine(0)/m/n/9 can also enable non-consensual tracking and discriminatory surveil-
  []
 
 
-Overfull \hbox (2.64008pt too wide) in paragraph at lines 227--230
+Overfull \hbox (2.64008pt too wide) in paragraph at lines 239--242
 \TU/LinLibertine(0)/m/n/9 sources (loyalty-card records, parking data, or face recognition logs)
  []
 
 
-Overfull \hbox (5.08876pt too wide) in paragraph at lines 235--240
+Overfull \hbox (5.08876pt too wide) in paragraph at lines 247--252
 \TU/LinLibertine(0)/m/n/9 domain shift. Training on Duke restores performance, and a stronger
  []
 
-
-
-[3.3] (./reid_experiment.bbl
+(./reid_experiment.bbl
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/m/it' will be
 (Font)              scaled to size 7.0pt on input line 42.
+
+Underfull \vbox (badness 1014) has occurred while \output is active []
+
+
+
 )
 
 Class acmart Warning: Some images may lack descriptions.
@@ -1603,11 +1623,10 @@ Class acmart Warning: Some images may lack descriptions.
 
 
 
+Package balance Warning: You have called \balance in second column
+(balance)                Columns might not be balanced.
 
-
-Overfull \vbox (1.46599pt too high) has occurred while \output is active []
-
- [4.4] (./reid_experiment.aux)
+[4.4] (./reid_experiment.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1626,6 +1645,6 @@ Here is how much of TeX's memory you used:
  54312 multiletter control sequences out of 15000+600000
  608346 words of font info for 165 fonts, out of 8000000 for 9000
  1509 hyphenation exceptions out of 8191
- 109i,12n,131p,1008b,960s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 109i,13n,131p,1008b,960s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
 Output written on reid_experiment.pdf (4 pages).

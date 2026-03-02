@@ -109,6 +109,11 @@ Compared with Market in-domain results (Rank@1 $=0.8774$, mAP $=0.7219$), the ab
 This is consistent with the intuition that camera networks, backgrounds, illumination, and clothing distribution differ across datasets, so representations trained for one domain may not transfer without adaptation.
 The magnitude of the drop also confirms that dataset-specific low-level statistics (e.g., color balance, background texture) are inadvertently encoded by the model alongside identity features.
 
+Note that Rank@5 ($=0.4852$) recovers noticeably relative to Rank@1 ($=0.3299$).
+This suggests that correct gallery matches are not completely lost in the embedding space; rather, domain-specific hard negatives push the true match from rank 1 to ranks 2--5.
+The softmax loss optimizes inter-class separability but does not explicitly enforce intra-class compactness, so the learned embeddings carry an implicit dependence on the training domain's low-level statistics.
+When that distribution shifts, the relative ordering of same-identity pairs is disrupted more severely at the top of the ranking than further down.
+
 \subsection{Duke training and variants}
 Table 2 reports Duke results when training on Duke as well as variants.
 Among tested backbones, HRNet yields the best performance in our runs.
@@ -117,9 +122,12 @@ Among tested backbones, HRNet yields the best performance in our runs.
 DenseNet improves over the ResNet-50 baseline by $+0.0216$ Rank@1 and $+0.0310$ mAP, while HRNet achieves the largest gains ($+0.0454$ Rank@1, $+0.0772$ mAP), benefiting from its parallel multi-resolution representation that preserves spatial detail throughout training.
 
 \paragraph{Loss function variants.}
-Among the three alternative loss functions tested on the ResNet-50 backbone, Circle loss slightly underperforms the softmax baseline ($-0.0107$ Rank@1, $-0.0046$ mAP), which may reflect sensitivity to the margin hyper-parameters under the relatively small Duke training set.
+Among the three alternative loss functions tested on the ResNet-50 backbone, Circle loss slightly underperforms the softmax baseline ($-0.0107$ Rank@1, $-0.0046$ mAP).
+Circle loss assigns an adaptive margin to each similarity score, which requires diverse and abundant per-identity samples to produce stable gradient signals; DukeMTMC-reID has fewer images per identity than Market-1501, so the circular decision boundary may not receive sufficient coverage to converge to a better optimum than softmax under the same 60-epoch budget.
 Instance loss recovers Rank@1 to $0.8007$ ($+0.0072$ over baseline) while also improving mAP to $0.6232$.
+By treating each image as its own class in a noise-contrastive objective, instance loss forces the model to distinguish fine-grained within-identity appearance variations rather than only coarse inter-identity boundaries, which benefits Rank@1 precision.
 Triplet loss achieves a similar mAP ($0.6232$) with Rank@1 at $0.7931$, nearly matching the baseline.
+Both instance and triplet losses push same-identity pairs closer while pulling different-identity pairs apart, so their optimization objectives are structurally similar; the near-identical mAP values reflect that neither sampling strategy nor hard-mining was specially tuned in these runs, leaving the two methods with effectively equivalent discrimination power at this batch size.
 Overall, the gains from loss variants alone are modest compared with the gains from using a stronger backbone; combining HRNet with metric losses is a natural next step not covered here.
 Note that the current experiment matrix covers ResNet-50 $\times$ \{softmax, circle, instance, triplet\} and \{DenseNet, HRNet\} $\times$ softmax only; cross-combinations such as HRNet$+$triplet remain untested.
 
@@ -218,6 +226,10 @@ Based on the above results and observed failures, we propose:
   \item \textbf{Stronger augmentation and sampling:} combine random erasing (\texttt{--erasing\_p}, already available in the codebase), color jitter, and identity-balanced batch sampling to improve robustness to occlusion and illumination changes.
   Random erasing specifically addresses the occlusion patterns observed in Case-1 by forcing the model to use distributed, non-local cues rather than a single discriminative region.
   Identity-balanced sampling ensures that each mini-batch contains multiple images per identity, which is a prerequisite for effective metric loss training (triplet, circle) and also reduces the bias toward frequent identities.
+  \item \textbf{Part-based pooling or attention modules:} insert a channel attention block (e.g., Squeeze-and-Excitation) or horizontal part pooling between the backbone feature map and the global descriptor.
+  These modules direct the model to weight identity-relevant regions (head, torso, legs) over background, directly targeting the background-interference failure mode observed in Case-2.
+  This direction is also consistent with the advantage of HRNet: by maintaining high-resolution spatial representations throughout training, HRNet implicitly retains part-level detail that global average pooling on lower-resolution maps discards.
+  An explicit part or attention mechanism could provide similar benefits on a lighter backbone such as ResNet-50, reducing the compute overhead while recovering much of the spatial discriminability.
 \end{itemize}
 
 \section{AI Safety Reflection}
