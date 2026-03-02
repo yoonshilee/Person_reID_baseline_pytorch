@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.3)  1 MAR 2026 16:06
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.9.3)  2 MAR 2026 12:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1480,94 +1480,120 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/m/n' will be
-(Font)              scaled to size 8.0pt on input line 91.
+(Font)              scaled to size 8.0pt on input line 94.
 LaTeX Font Info:    Font shape `OML/nxlmi/m/it' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `OML/nxlmi/m/it' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `LMS/ntxsy/m/n' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `LMX/ntxexx/m/n' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxmia/m/it' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxsym/m/n' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxsyc/m/n' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 8.0pt on input line 92.
+(Font)              scaled to size 8.0pt on input line 95.
 LaTeX Font Info:    Font shape `U/ntxexa/m/n' will be
-(Font)              scaled to size 6.0pt on input line 92.
+(Font)              scaled to size 6.0pt on input line 95.
 
 
 LaTeX Font Warning: Font shape `TU/zi4/b/n' undefined
-(Font)              using `TU/zi4/m/n' instead on input line 99.
-
-
-Underfull \vbox (badness 2073) has occurred while \output is active []
+(Font)              using `TU/zi4/m/n' instead on input line 102.
 
 
 
 [1.1
 
 ]
+LaTeX Font Info:    Font shape `TU/LinLibertine(0)/m/it' will be
+(Font)              scaled to size 9.0pt on input line 117.
+
+Overfull \hbox (2.51225pt too wide) in paragraph at lines 117--118
+\TU/LinLibertine(0)/m/n/9 the largest gains ($\LMS/ntxsy/m/n/9 Ï\OT1/LinLibertine(0)/m/n/9 0\OML/nxlmi/m/it/9 :\OT1/LinLibertine(0)/m/n/9 0454$ \TU/LinLibertine(0)/m/n/9 Rank@1, $\LMS/ntxsy/m/n/9 Ï\OT1/LinLibertine(0)/m/n/9 0\OML/nxlmi/m/it/9 :\OT1/LinLibertine(0)/m/n/9 0772$ \TU/LinLibertine(0)/m/n/9 mAP), benefiting from
+ []
+
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
-(Font)              scaled to size 8.0pt on input line 128.
+(Font)              scaled to size 8.0pt on input line 143.
 File: ../pics/duke_variants_bar.pdf Graphic file (type pdf)
 <use ../pics/duke_variants_bar.pdf>
 
-
-Class acmart Warning: A possible image without description on input line 138.
-
+Class acmart Warning: A possible image without description on input line 153.
 
 
+
+LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
+(Font)              scaled to size 6.6pt on input line 170.
+LaTeX Font Info:    Font shape `TU/LinLibertine(0)/b/n' will be
+(Font)              scaled to size 5.5pt on input line 170.
+
+
+LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
+(Font)              scaled to size 9.0pt on input line 179.
+LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
+(Font)              scaled to size 7.0pt on input line 179.
+[2.2]
+File: ../pics/show_success1.png Graphic file (type bmp)
+<../pics/show_success1.png>
+File: ../pics/show_success2.png Graphic file (type bmp)
+<../pics/show_success2.png>
 File: ../pics/show_case1.png Graphic file (type bmp)
 <../pics/show_case1.png>
 File: ../pics/show_case2.png Graphic file (type bmp)
 <../pics/show_case2.png>
 
-Overfull \hbox (5.02423pt too wide) in paragraph at lines 170--173
+Overfull \hbox (5.02423pt too wide) in paragraph at lines 201--204
 \TU/LinLibertine(0)/m/n/9 The Top-1 retrieved image is an incorrect identity, $[][][][] [] [][] [] [][][][][][][][] []
  []
 
 
-Overfull \hbox (6.56479pt too wide) in paragraph at lines 170--173
+Overfull \hbox (6.56479pt too wide) in paragraph at lines 201--204
 \TU/LinLibertine(0)/m/n/9 invariance: viewpoint and illumination changes likely shift the query
  []
 
 
 
-LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 9.0pt on input line 182.
-LaTeX Font Info:    Font shape `TU/LinBiolinum(0)/m/n' will be
-(Font)              scaled to size 7.0pt on input line 182.
-[2.2]
-Overfull \hbox (2.27776pt too wide) in paragraph at lines 183--184
+
+Overfull \hbox (1.68074pt too wide) in paragraph at lines 213--218
+\TU/LinLibertine(0)/m/n/9 near the decision boundary. In published benchmarks, mAP
+ []
+
+
+Overfull \hbox (2.27776pt too wide) in paragraph at lines 218--221
 []\TU/LinLibertine(0)/b/n/9 Stronger augmentation and sampling: \TU/LinLibertine(0)/m/n/9 combine random
  []
 
 
-Overfull \hbox (3.20853pt too wide) in paragraph at lines 187--190
+Overfull \hbox (3.20853pt too wide) in paragraph at lines 224--226
 \TU/LinLibertine(0)/m/n/9 can also enable non-consensual tracking and discriminatory surveil-
  []
 
 
-Overfull \hbox (5.08876pt too wide) in paragraph at lines 192--197
+Overfull \hbox (2.64008pt too wide) in paragraph at lines 227--230
+\TU/LinLibertine(0)/m/n/9 sources (loyalty-card records, parking data, or face recognition logs)
+ []
+
+
+Overfull \hbox (5.08876pt too wide) in paragraph at lines 235--240
 \TU/LinLibertine(0)/m/n/9 domain shift. Training on Duke restores performance, and a stronger
  []
 
-(./reid_experiment.bbl
+
+
+[3.3] (./reid_experiment.bbl
 LaTeX Font Info:    Font shape `TU/LinLibertine(0)/m/it' will be
 (Font)              scaled to size 7.0pt on input line 42.
 )
@@ -1578,7 +1604,10 @@ Class acmart Warning: Some images may lack descriptions.
 
 
 
-[3.3] (./reid_experiment.aux)
+
+Overfull \vbox (1.46599pt too high) has occurred while \output is active []
+
+ [4.4] (./reid_experiment.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -1588,15 +1617,15 @@ L3 programming layer <2025-01-18>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `reid_experiment.out' has not changed.
-(rerunfilecheck)             Checksum: EEF51E5ACFFDD1D80F85C533D6E99437;3652.
+(rerunfilecheck)             Checksum: F37DF412D8B63793716A5F7EACEC4E24;3653.
  ) 
 Here is how much of TeX's memory you used:
- 31796 strings out of 473832
- 611657 string characters out of 5729028
- 1027589 words of memory out of 5000000
- 54281 multiletter control sequences out of 15000+600000
- 608322 words of font info for 162 fonts, out of 8000000 for 9000
+ 31832 strings out of 473832
+ 612783 string characters out of 5729028
+ 1029589 words of memory out of 5000000
+ 54312 multiletter control sequences out of 15000+600000
+ 608346 words of font info for 165 fonts, out of 8000000 for 9000
  1509 hyphenation exceptions out of 8191
  109i,12n,131p,1008b,960s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on reid_experiment.pdf (3 pages).
+Output written on reid_experiment.pdf (4 pages).

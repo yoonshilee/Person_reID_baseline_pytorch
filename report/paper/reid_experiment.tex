@@ -70,8 +70,11 @@ We also use a common test-time augmentation: horizontal flip, where features fro
 
 \subsection{Training configuration}
 Unless otherwise stated, we use the same training recipe across experiments for fair comparison: batch size $32$, total epochs $60$, initial learning rate $0.05$, weight decay $5\times 10^{-4}$, and dropout $0.5$.
-The code is configured to train with \texttt{--train\_all}, which removes a held-out validation split for hyper-parameter tuning.
-This simplifies the pipeline but increases the risk of overfitting and makes model selection less principled; therefore, the final comparison relies on the fixed query/gallery evaluation.
+The code is configured to train with \texttt{--train\_all}, which merges the training and validation splits so that all labeled identities are used for supervision.
+This has two competing effects: the larger training set can improve feature coverage and generalization, but the absence of a held-out validation split removes the ability to monitor overfitting or perform early stopping based on retrieval performance.
+In practice, we observe that validation accuracy converges from $0.52$ (epoch 0) to $0.98$ (epoch 12) and remains stable thereafter, suggesting the model does not severely overfit within 60 epochs.
+However, without a principled validation signal, the choice of evaluation epoch (fixed at 60 throughout) is somewhat arbitrary.
+All performance comparisons therefore rely solely on the fixed query/gallery protocol rather than any held-out validation metric.
 
 \subsection{Commands and reproducibility}
 We use the following commands:
@@ -102,11 +105,23 @@ ResNet-50 (softmax) & 0.8774 & 0.9561 & 0.9724 & 0.7219 \\
 
 \subsection{Domain shift: Market-trained model on Duke}
 Directly applying the Market-trained model on Duke results in a large performance drop (Rank@1 $=0.3299$, mAP $=0.1700$), indicating strong domain shift.
+Compared with Market in-domain results (Rank@1 $=0.8774$, mAP $=0.7219$), the absolute drops are $\Delta$Rank@1 $=0.5475$ and $\Delta$mAP $=0.5519$, both exceeding 50 percentage points.
 This is consistent with the intuition that camera networks, backgrounds, illumination, and clothing distribution differ across datasets, so representations trained for one domain may not transfer without adaptation.
+The magnitude of the drop also confirms that dataset-specific low-level statistics (e.g., color balance, background texture) are inadvertently encoded by the model alongside identity features.
 
 \subsection{Duke training and variants}
 Table 2 reports Duke results when training on Duke as well as variants.
 Among tested backbones, HRNet yields the best performance in our runs.
+
+\paragraph{Backbone variants.}
+DenseNet improves over the ResNet-50 baseline by $+0.0216$ Rank@1 and $+0.0310$ mAP, while HRNet achieves the largest gains ($+0.0454$ Rank@1, $+0.0772$ mAP), benefiting from its parallel multi-resolution representation that preserves spatial detail throughout training.
+
+\paragraph{Loss function variants.}
+Among the three alternative loss functions tested on the ResNet-50 backbone, Circle loss slightly underperforms the softmax baseline ($-0.0107$ Rank@1, $-0.0046$ mAP), which may reflect sensitivity to the margin hyper-parameters under the relatively small Duke training set.
+Instance loss recovers Rank@1 to $0.8007$ ($+0.0072$ over baseline) while also improving mAP to $0.6232$.
+Triplet loss achieves a similar mAP ($0.6232$) with Rank@1 at $0.7931$, nearly matching the baseline.
+Overall, the gains from loss variants alone are modest compared with the gains from using a stronger backbone; combining HRNet with metric losses is a natural next step not covered here.
+Note that the current experiment matrix covers ResNet-50 $\times$ \{softmax, circle, instance, triplet\} and \{DenseNet, HRNet\} $\times$ softmax only; cross-combinations such as HRNet$+$triplet remain untested.
 
 \begin{table}[t]
 \centering
@@ -152,9 +167,25 @@ Distances then emphasize angular differences and become less sensitive to scale,
 \noindent\textbf{Why call \texttt{optimizer.zero\_grad()}?} Gradients accumulate by default in PyTorch.
 Without clearing old gradients each iteration, updates implicitly sum gradients across steps, which usually destabilizes training unless gradient accumulation is intended.
 
+\noindent\textbf{Why is the output dimension $\text{batch size} \times 751$ (or $702$)?} The classification head outputs one logit per training identity, so the output width equals the number of training classes.
+Market-1501 has 751 training identities, yielding shape $N\times 751$; DukeMTMC-reID has 702 training identities, yielding $N\times 702$.
+This reflects that ReID training is framed as closed-set multi-class classification, even though test-time evaluation is open-set retrieval over unseen identities.
+At inference, the classification head is discarded and only the 512-dimensional embedding before the head is used for distance-based ranking.
+
 \section{Failure Case Analysis}
-We analyze two failure cases from Duke evaluation (visualizations in Figure 1).
-Both cases exhibit a ``no positives in Top-10'' pattern, where the first correct match appears extremely late in the ranking.
+For contrast, Figures~\ref{fig:successes} and~\ref{fig:failures} show two success cases and two failure cases from the Duke evaluation.
+In the success cases (Figure~\ref{fig:successes}), all Top-10 retrieved images belong to the correct identity, indicating that the model produces compact, well-separated clusters for identities with consistent appearance across cameras.
+In the failure cases (Figure~\ref{fig:failures}), both queries exhibit a ``no positives in Top-10'' pattern, where the first correct match appears extremely late in the ranking.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.98\linewidth]{show_success1.png}
+
+  \includegraphics[width=0.98\linewidth]{show_success2.png}
+  \caption{Two DukeMTMC-reID success cases (Top-10 retrieval). Top: query index 0 (ID 5, cam 2). Bottom: query index 1 (ID 5, cam 5). All Top-10 results are correct matches.}
+  \Description{Two vertically stacked retrieval result images showing success cases on DukeMTMC-reID. Both queries return Top-10 results that are all correct positive matches.}
+  \label{fig:successes}
+\end{figure}
 
 \begin{figure}[t]
   \centering
@@ -179,14 +210,26 @@ The pattern suggests that the model over-relies on non-identity cues, such as ba
 \section{Improvement Proposals}
 Based on the above results and observed failures, we propose:
 \begin{itemize}
-  \item \textbf{Re-ranking:} apply k-reciprocal re-ranking or GNN-based re-ranking to refine the initial ranking. This often improves mAP by correcting hard negatives at high ranks, at the cost of additional time and memory.
-  \item \textbf{Stronger augmentation and sampling:} combine random erasing, color jitter, and identity-balanced sampling to improve robustness to occlusion and illumination changes, reducing overfitting to dataset-specific cues.
+  \item \textbf{Re-ranking:} apply k-reciprocal re-ranking~\cite{zhong2017re} or GNN-based re-ranking to refine the initial ranking list.
+  By encoding mutual nearest-neighbor relationships between query and gallery features, re-ranking can correct hard negatives near the decision boundary.
+  In published benchmarks, mAP improvements of $3$--$8$ percentage points are commonly reported on Duke-style datasets.
+  The main cost is $O(N^2)$ pairwise distance computation and sensitivity to the hyper-parameters $k_1$, $k_2$, and $\lambda$; these can be tuned on a held-out split.
+  The codebase already provides \texttt{re\_ranking.py} for direct use.
+  \item \textbf{Stronger augmentation and sampling:} combine random erasing (\texttt{--erasing\_p}, already available in the codebase), color jitter, and identity-balanced batch sampling to improve robustness to occlusion and illumination changes.
+  Random erasing specifically addresses the occlusion patterns observed in Case-1 by forcing the model to use distributed, non-local cues rather than a single discriminative region.
+  Identity-balanced sampling ensures that each mini-batch contains multiple images per identity, which is a prerequisite for effective metric loss training (triplet, circle) and also reduces the bias toward frequent identities.
 \end{itemize}
 
 \section{AI Safety Reflection}
 ReID is a dual-use technology.
 It can support positive applications such as search-and-rescue and authorized security auditing, but it can also enable non-consensual tracking and discriminatory surveillance.
-We suggest safeguards aligned with ``lawful authorization + minimal necessity + auditability'': minimize retention (store only necessary encrypted embeddings), enforce access control and audit logs, apply rate limiting and thresholding for external queries, and conduct governance reviews for high-risk deployments.
+
+To make the risks concrete, consider a shopping mall that deploys a ReID system to study pedestrian flow.
+If the embedding database is exfiltrated, an attacker can cross-reference it with other sources (loyalty-card records, parking data, or face recognition logs) to reconstruct fine-grained individual trajectories across days and locations without the subjects' knowledge.
+Even without a breach, the operator can silently repurpose the system from flow analytics to targeted individual monitoring, since the same embeddings support both use cases.
+
+We suggest safeguards aligned with ``lawful authorization + minimal necessity + auditability'': minimize retention (store only necessary encrypted embeddings with bounded time-to-live), enforce access control and audit logs, apply rate limiting and similarity-score thresholding to external queries, and require independent governance reviews before high-risk deployments.
+Critically, operational purpose should be locked at system design time and enforced technically, not merely through policy.
 
 \section{Conclusion}
 We reproduced a strong ReID baseline on Market-1501 and evaluated transfer and variants on DukeMTMC-reID.
